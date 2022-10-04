@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/675ee43295.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <section id="loader" class="loader">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </section>
+    <section class="img" id="img"></section>
+    <div class="search">
+        <input class="input" type="text" placeholder="Enter City in the US">
+        <i class="fa-solid fa-magnifying-glass btn"></i>
+    </div>
+    <div class="myLocation btn">My Location</div>
+    <div class="todayContainer">
+        <h1 class="time" id="time"></h1>
+        <div class="dayMonth" id="fullDate"></div>
+        <div class="todayDetailsContainer">
+            <div class="detail">
+                <span>Description:</span>
+                <span id="descriptionInput">. . .</span>
+            </div>
+            <div class="detail">
+                <span>Temperature:</span>
+                <span id="tempInput">. . .</span>
+            </div>
+            <div class="detail">
+                <span>Feels like:</span>
+                <span id="feelsInput">. . .</span>
+            </div>
+            <div class="detail">
+                <span>Humidity:</span>
+                <span id="humidityInput">. . .</span>
+            </div>
+            <div class="detail">
+                <span>Wind Speed:</span>
+                <span id="wSpeedInput">. . .</span>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="week" id="week"></section>
+
+    <script src="./index.js"></script>
+</body>
+
+</html>
