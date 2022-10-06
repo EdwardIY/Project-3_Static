@@ -9,6 +9,7 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const mainCard = {
+    location: document.getElementById('location'),
     des: document.getElementById("descriptionInput"),
     temp: document.getElementById("tempInput"),
     feels: document.getElementById("feelsInput"),
@@ -86,6 +87,7 @@ function getWeek(option, pointOne, pointTwo) {
         .then((re) => re.json())
         .then((data) => {
             if (data.cod != 200) throw Error("Location not found..")
+            mainCard.location.textContent = data.name
             mainCard.des.textContent = [...data.weather].pop().description[0].toUpperCase() + [...data.weather].pop().description.slice(1)
             mainCard.temp.textContent = data.main.temp + " °F";
             mainCard.feels.textContent = data.main.feels_like + " °F";
