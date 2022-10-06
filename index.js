@@ -53,7 +53,6 @@ document.addEventListener("keydown", (e) => {
 })
 
 
-let currentTime;
 function clock(currentDate = new Date()) {
     const date = currentDate;
     const timeString = date.toLocaleTimeString()
@@ -98,7 +97,7 @@ function getWeek(option, pointOne, pointTwo) {
             fetch(searchTwo)
                 .then((res) => res.json())
                 .then((data) => {
-                    const list = data.list.filter((x, i) => {
+                    const list = data.list.filter((x) => {
                         const time = new Date(x.dt * 1000).toLocaleString().split(", ")[1];
                         if (time == '5:00:00 PM' || time == '11:00:00 AM') return true;
                     });
@@ -180,8 +179,6 @@ function getTime(data) {
 
 function getBackG(data, time) {
     time = time.split(":")
-    const weather = data[1];
-
     const images = ['url(./images/Night/clear.jpg)', 'url(./images/Night/cloud.jpg)',
         'url(./images/Night/rain.jpg)', 'url(./images/Night/snow.jpg)', 'url(./images/Day/clear.jpg)',
         'url(./images/Day/cloud.jpg)', 'url(./images/Day/rain.jpg)', 'url(./images/Day/snow.jpg)',
