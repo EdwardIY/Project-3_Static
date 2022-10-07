@@ -178,6 +178,10 @@ function getTime(data) {
 }
 
 function getBackG(data, time) {
+    if(screen.width <= 425){
+        disableLoader()
+        return;
+    }
     time = time.split(":")
     const images = ['url(./images/Night/clear.jpg)', 'url(./images/Night/cloud.jpg)',
         'url(./images/Night/rain.jpg)', 'url(./images/Night/snow.jpg)', 'url(./images/Day/clear.jpg)',
@@ -209,3 +213,5 @@ function getBackG(data, time) {
     }
     disableLoader() // TURN LOADER OFF
 }
+
+setInterval(()=> console.log(screen.width),1000)
