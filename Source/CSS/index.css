@@ -7,6 +7,10 @@
     font-family: poppins, Arial, Helvetica, sans-serif;
 }
 
+body {
+    background-color: black;
+}
+
 .img {
     background-image: url(../images/Day/snow.jpg);
     background-position: center center;
