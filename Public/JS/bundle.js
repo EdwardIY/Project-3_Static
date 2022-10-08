@@ -1,1 +1,206 @@
-(()=>{"use strict";const e=document.getElementById("loader"),t=document.querySelector(".btn"),n=document.querySelector(".myLocation"),a=document.querySelector(".input"),i=document.getElementById("week"),o=document.getElementById("time"),l=document.getElementById("fullDate"),c=["January","February","March","April","May","June","July","August","September","October","November","December"],s=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],r={location:document.getElementById("location"),des:document.getElementById("descriptionInput"),temp:document.getElementById("tempInput"),feels:document.getElementById("feelsInput"),hum:document.getElementById("humidityInput"),windS:document.getElementById("wSpeedInput")};let p=[];const d=document.getElementById("img");function u(){e.style.opacity="1",e.style.zIndex="2"}function m(){e.style.opacity="0",e.style.zIndex="0"}function g(e=new Date){const t=e,n=t.toLocaleTimeString();o.textContent=n.split(":")[0]+":"+n.split(":")[1]+n.slice(-3),l.textContent=s[t.getDay()]+", "+t.getDate()+" "+c[t.getMonth()],0==p.length&&p.push(n.slice(-2))}n.addEventListener("click",(()=>{navigator.geolocation.getCurrentPosition((e=>{b("myP",e.coords.latitude,e.coords.longitude),u()}))})),t.addEventListener("click",(()=>{b("searched",a.value),u()})),document.addEventListener("keydown",(e=>{"Enter"==e.key&&(b("searched",a.value),u())}));const y=setInterval(g,1e3);let h;function b(e,t,n){let o,l;p=[],i.style.opacity="1",i.innerHTML="","myP"==e&&(o=`https://api.openweathermap.org/data/2.5/weather?lat=${t}&lon=${n}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`,l=`https://api.openweathermap.org/data/2.5/forecast?lat=${t}&lon=${n}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`),"searched"==e&&(o=`https://api.openweathermap.org/data/2.5/weather?q=${t}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`,l=`https://api.openweathermap.org/data/2.5/forecast?q=${t}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`),fetch(o).then((e=>e.json())).then((e=>{if(200!=e.cod)throw Error("Location not found..");r.location.textContent=e.name,r.des.textContent=[...e.weather].pop().description[0].toUpperCase()+[...e.weather].pop().description.slice(1),r.temp.textContent=e.main.temp+" °F",r.feels.textContent=e.main.feels_like+" °F",r.hum.textContent=e.main.humidity+"%",r.windS.textContent=e.wind.speed+"mph",p.push([...e.weather].pop().description)})).then((()=>{fetch(l).then((e=>e.json())).then((e=>{const t=e.list.filter((e=>{const t=new Date(1e3*e.dt).toLocaleString().split(", ")[1];if("5:00:00 PM"==t||"11:00:00 AM"==t)return!0}));let n=1;const a=[];for(let e=0;e<t.length;e+=2)a.push([[...t].splice(e,2)]);a.forEach(((e,t)=>{const a=new Date;i.innerHTML+=0==t?`\n                    <div class="currentDay">\n                        <img src="http://openweathermap.org/img/wn/${e[0][0].weather[0].icon}@2x.png" alt="">\n                        <div class="info">\n                            <span>${s[a.getDay()+n].slice(0,3)}</span>\n                            <span><b>Mid-Day</b> - ${e[0][0].main.temp} °F</span>\n                            <span><b>Afternoon</b> - ${e[0][1].main.temp} °F</span>\n                        </div>\n                    </div>\n\n                    `:`\n                    <div class="day">\n                        <span>${s[a.getDay()+n].slice(0,3)}</span>\n                        <img src="http://openweathermap.org/img/wn/${e[0][0].weather[0].icon}@2x.png" height:50px; width:50px; alt="">\n                        <span><b>Mid-Day</b> - ${e[0][0].main.temp}°F</span>\n                        <span><b>Afternoon</b> - ${e[0][1].main.temp}°F</span>\n                    </div>\n                    `,n++})),clearInterval(y),clearInterval(h),f(e),h=setInterval((function(){f(e)}),6e4)}))})).catch((e=>{r.des.textContent=". . .",r.temp.textContent=". . .",r.feels.textContent=". . .",r.windS.textContent=". . .",r.hum.textContent=". . .",i.style.opacity="0",a.value=e.message,a.style.opacity=".5",setTimeout((()=>{a.value="",a.style.opacity="initial"}),1500),m()}))}function f(e){fetch(`https://api.ipgeolocation.io/timezone?apiKey=957a47b3088a40a8a20879acaf412420&lat=${e.city.coord.lat}&long=${e.city.coord.lon}`).then((e=>e.json())).then((e=>{g(new Date(e.date_time_ymd.slice(0,-5)));const t=(new Date).toLocaleTimeString().slice(-2);1==p.length&&p.unshift(t),function(e,t){if(screen.width<=425)return void m();let n,a=(t=t.split(":"))[2].slice(-2);console.log(a),"AM"==a&&12==+t[0]||"AM"==a&&+t[0]<6?n="Night":"PM"==a&&12==+t[0]||"PM"==a&&+t[0]<=3||"AM"==a&&+t[0]>=6?n="Day":"PM"==a&&+t[0]>3&&"PM"==a&&+t[0]<=6?n="Afternoon":"PM"==a&&+t[0]>6&&(n="Night"),console.log(e[1]),d.style.backgroundImage=["url(./Public/images/Night/clear.jpg)","url(./Public/images/Night/cloud.jpg)","url(./Public/images/Night/rain.jpg)","url(./Public/images/Night/snow.jpg)","url(./Public/images/Day/clear.jpg)","url(./Public/images/Day/cloud.jpg)","url(./Public/images/Day/rain.jpg)","url(./Public/images/Day/snow.jpg)","url(./Public/images/Afternoon/clear.jpg)","url(./Public/images/Afternoon/cloud.jpg)","url(./Public/images/Afternoon/rain.jpg)","url(./Public/images/Afternoon/snow.jpg)"].filter((t=>{const a=t.slice(0,-5).split("/").reverse()[0],i=t.slice(0,-5).split("/").reverse()[1];if(console.log(i,n),e[1].includes(a)&&i==n)return!0})),0==d.style.backgroundImage.length&&(d.style.backgroundImage="url(./Public/images/Atmosphere/fog.jpg)"),m()}(p,new Date(e.date_time_ymd.slice(0,-5)).toLocaleTimeString())}))}setInterval((()=>console.log(screen.width)),1e3)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+
+const loader = document.getElementById('loader');
+const btn = document.querySelector('.btn');
+const myLocation = document.querySelector('.myLocation');
+const searchInput = document.querySelector('.input');
+const week = document.getElementById('week');
+const time = document.getElementById('time');
+const fullDate = document.getElementById('fullDate');
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const mainCard = {
+  location: document.getElementById('location'),
+  des: document.getElementById("descriptionInput"),
+  temp: document.getElementById("tempInput"),
+  feels: document.getElementById("feelsInput"),
+  hum: document.getElementById("humidityInput"),
+  windS: document.getElementById("wSpeedInput")
+};
+let backG_details = [];
+const backG = document.getElementById('img'); // LOADER
+
+function activateLoader() {
+  loader.style.opacity = "1";
+  loader.style.zIndex = "2";
+}
+
+function disableLoader() {
+  loader.style.opacity = "0";
+  loader.style.zIndex = "0";
+} // SEARCH OPTIONS
+
+
+myLocation.addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(position => {
+    let lat = position.coords.latitude;
+    let long = position.coords.longitude;
+    getWeek("myP", lat, long);
+    activateLoader(); // TURN ON LOADER
+  });
+});
+btn.addEventListener("click", () => {
+  getWeek("searched", searchInput.value);
+  activateLoader(); // TURN ON LOADER
+});
+document.addEventListener("keydown", e => {
+  if (e.key == "Enter") {
+    getWeek("searched", searchInput.value);
+    activateLoader(); // TURN ON LOADER
+  }
+});
+
+function clock(currentDate = new Date()) {
+  const date = currentDate;
+  const timeString = date.toLocaleTimeString();
+  time.textContent = timeString.split(":")[0] + ":" + timeString.split(":")[1] + timeString.slice(-3);
+  fullDate.textContent = days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()];
+  if (backG_details.length == 0) backG_details.push(timeString.slice(-2));
+}
+
+const setClock = setInterval(clock, 1000);
+let setNewTime; // Timer holder for searched location
+
+function getWeek(option, pointOne, pointTwo) {
+  backG_details = []; // Clear time & weather details for background image
+
+  week.style.opacity = "1"; // Make week visible 
+
+  week.innerHTML = ""; // Clear week
+
+  let searchOne;
+  let searchTwo;
+
+  if (option == "myP") {
+    searchOne = `https://api.openweathermap.org/data/2.5/weather?lat=${pointOne}&lon=${pointTwo}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`;
+    searchTwo = `https://api.openweathermap.org/data/2.5/forecast?lat=${pointOne}&lon=${pointTwo}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`;
+  }
+
+  if (option == "searched") {
+    searchOne = `https://api.openweathermap.org/data/2.5/weather?q=${pointOne}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`;
+    searchTwo = `https://api.openweathermap.org/data/2.5/forecast?q=${pointOne}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`;
+  }
+
+  fetch(searchOne).then(re => re.json()).then(data => {
+    if (data.cod != 200) throw Error("Location not found..");
+    mainCard.location.textContent = data.name;
+    mainCard.des.textContent = [...data.weather].pop().description[0].toUpperCase() + [...data.weather].pop().description.slice(1);
+    mainCard.temp.textContent = data.main.temp + " °F";
+    mainCard.feels.textContent = data.main.feels_like + " °F";
+    mainCard.hum.textContent = data.main.humidity + "%";
+    mainCard.windS.textContent = data.wind.speed + "mph";
+    backG_details.push([...data.weather].pop().description);
+  }).then(() => {
+    fetch(searchTwo).then(res => res.json()).then(data => {
+      const list = data.list.filter(x => {
+        const time = new Date(x.dt * 1000).toLocaleString().split(", ")[1];
+        if (time == '5:00:00 PM' || time == '11:00:00 AM') return true;
+      });
+      let dayCount = 1;
+      const weekList = [];
+
+      for (let time = 0; time < list.length; time += 2) weekList.push([[...list].splice(time, 2)]);
+
+      weekList.forEach((x, i) => {
+        const date = new Date();
+
+        if (i == 0) {
+          week.innerHTML += `
+                    <div class="currentDay">
+                        <img src="http://openweathermap.org/img/wn/${x[0][0].weather[0].icon}@2x.png" alt="">
+                        <div class="info">
+                            <span>${days[date.getDay() + dayCount].slice(0, 3)}</span>
+                            <span><b>Mid-Day</b> - ${x[0][0].main.temp} °F</span>
+                            <span><b>Afternoon</b> - ${x[0][1].main.temp} °F</span>
+                        </div>
+                    </div>
+
+                    `;
+        } else {
+          week.innerHTML += `
+                    <div class="day">
+                        <span>${days[date.getDay() + dayCount].slice(0, 3)}</span>
+                        <img src="http://openweathermap.org/img/wn/${x[0][0].weather[0].icon}@2x.png" height:50px; width:50px; alt="">
+                        <span><b>Mid-Day</b> - ${x[0][0].main.temp}°F</span>
+                        <span><b>Afternoon</b> - ${x[0][1].main.temp}°F</span>
+                    </div>
+                    `;
+        }
+
+        dayCount++;
+      });
+      clearInterval(setClock); // Clear clock for base location
+
+      clearInterval(setNewTime); // Clear clock for past search location
+
+      getTime(data); // Initial new time based searched location
+
+      setNewTime = setInterval(function () {
+        // Start clock for searched location
+        getTime(data);
+      }, 60000);
+    });
+  }).catch(err => {
+    // Clear today card
+    mainCard.des.textContent = '. . .';
+    mainCard.temp.textContent = '. . .';
+    mainCard.feels.textContent = '. . .';
+    mainCard.windS.textContent = '. . .';
+    mainCard.hum.textContent = '. . .'; // Clear week 
+
+    week.style.opacity = "0"; // Handle error in search input
+
+    searchInput.value = err.message;
+    searchInput.style.opacity = '.5';
+    setTimeout(() => {
+      searchInput.value = "";
+      searchInput.style.opacity = "initial";
+    }, 1500);
+    disableLoader(); // TURN LOADER OFF
+  });
+}
+
+function getTime(data) {
+  fetch(`https://api.ipgeolocation.io/timezone?apiKey=957a47b3088a40a8a20879acaf412420&lat=${data.city.coord.lat}&long=${data.city.coord.lon}`).then(res => res.json()).then(data => {
+    clock(new Date(data.date_time_ymd.slice(0, -5)));
+    const timeString = new Date().toLocaleTimeString().slice(-2);
+    if (backG_details.length == 1) backG_details.unshift(timeString);
+    getBackG(backG_details, new Date(data.date_time_ymd.slice(0, -5)).toLocaleTimeString());
+  });
+}
+
+function getBackG(data, time) {
+  if (screen.width <= 425) {
+    disableLoader();
+    return;
+  }
+
+  time = time.split(":");
+  const images = ['url(./Public/images/Night/clear.jpg)', 'url(./Public/images/Night/cloud.jpg)', 'url(./Public/images/Night/rain.jpg)', 'url(./Public/images/Night/snow.jpg)', 'url(./Public/images/Day/clear.jpg)', 'url(./Public/images/Day/cloud.jpg)', 'url(./Public/images/Day/rain.jpg)', 'url(./Public/images/Day/snow.jpg)', 'url(./Public/images/Afternoon/clear.jpg)', 'url(./Public/images/Afternoon/cloud.jpg)', 'url(./Public/images/Afternoon/rain.jpg)', 'url(./Public/images/Afternoon/snow.jpg)'];
+  let time_One;
+  let time_Two = time[2].slice(-2);
+  console.log(time_Two);
+  if (time_Two == "AM" && +time[0] == 12 || time_Two == "AM" && +time[0] < 6) time_One = "Night";else if (time_Two == "PM" && +time[0] == 12 || time_Two == "PM" && +time[0] <= 3) time_One = "Day";else if (time_Two == "AM" && +time[0] >= 6) time_One = "Day";else if (time_Two == "PM" && +time[0] > 3 && time_Two == "PM" && +time[0] <= 6) time_One = "Afternoon";else if (time_Two == "PM" && +time[0] > 6) time_One = "Night";
+  console.log(data[1]);
+  backG.style.backgroundImage = images.filter(x => {
+    const weather = x.slice(0, -5).split("/").reverse()[0];
+    const time = x.slice(0, -5).split("/").reverse()[1];
+    console.log(time, time_One);
+
+    if (data[1].includes(weather) && time == time_One) {
+      return true;
+    }
+  });
+
+  if (backG.style.backgroundImage.length == 0) {
+    backG.style.backgroundImage = 'url(./Public/images/Atmosphere/fog.jpg)';
+  }
+
+  disableLoader(); // TURN LOADER OFF
+}
+
+setInterval(() => console.log(screen.width), 1000);
+/******/ })()
+;
