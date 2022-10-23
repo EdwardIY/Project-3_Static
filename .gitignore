@@ -1,5 +1,6 @@
 .vscode
 node_Modules
 webpack.config.js
-.eslint.json
 package-lock.json
+tsconfig.json
+.babelrc

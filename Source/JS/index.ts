@@ -1,24 +1,26 @@
-import '../CSS/index.css'
-const loader = document.getElementById('loader')
-const btn = document.querySelector('.btn');
-const myLocation = document.querySelector('.myLocation')
-const searchInput = document.querySelector('.input');
-const week = document.getElementById('week');
-const time = document.getElementById('time');
-const fullDate = document.getElementById('fullDate');
+import '../CSS/index.css';
+const loader = document.getElementById('loader')!
+const btn = document.querySelector('.btn')!
+const myLocation = document.querySelector('.myLocation')!
+const searchInput = document.querySelector('.input') as HTMLInputElement
+const week = document.getElementById('week')!
+const time = document.getElementById('time')!
+const fullDate = document.getElementById('fullDate')!
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+
 const mainCard = {
-    location: document.getElementById('location'),
-    des: document.getElementById("descriptionInput"),
-    temp: document.getElementById("tempInput"),
-    feels: document.getElementById("feelsInput"),
-    hum: document.getElementById("humidityInput"),
-    windS: document.getElementById("wSpeedInput"),
+    location: document.getElementById('location')!,
+    des: document.getElementById("descriptionInput")!,
+    temp: document.getElementById("tempInput")!,
+    feels: document.getElementById("feelsInput")!,
+    hum: document.getElementById("humidityInput")!,
+    windS: document.getElementById("wSpeedInput")!
 }
-let backG_details = [];
-const backG = document.getElementById('img')
+let backG_details:string[] = [];
+const backG:any = document.getElementById('img')!
 
 // LOADER
 function activateLoader() {
@@ -33,11 +35,11 @@ function disableLoader() {
 
 // SEARCH OPTIONS
 myLocation.addEventListener("click", () => {
+    // activateLoader()   // TURN ON LOADER
     navigator.geolocation.getCurrentPosition((position) => {
-        let lat = position.coords.latitude;
-        let long = position.coords.longitude;
+        let lat:number = position.coords.latitude;
+        let long:number = position.coords.longitude;
         getWeek("myP", lat, long)
-        activateLoader()   // TURN ON LOADER
     })
 })
 
@@ -56,7 +58,7 @@ document.addEventListener("keydown", (e) => {
 
 function clock(currentDate = new Date()) {
     const date = currentDate;
-    const timeString = date.toLocaleTimeString()
+    const timeString:string = date.toLocaleTimeString()
     time.textContent = timeString.split(":")[0] + ":" + timeString.split(":")[1] + timeString.slice(-3)
     fullDate.textContent = days[date.getDay()] + ", " + date.getDate() + " " + months[date.getMonth()]
 
@@ -66,14 +68,14 @@ function clock(currentDate = new Date()) {
 const setClock = setInterval(clock, 1000)
 
 
-let setNewTime; // Timer holder for searched location
-function getWeek(option, pointOne, pointTwo) {
+let setNewTime: string | number | NodeJS.Timer | undefined; // Timer holder for searched location
+function getWeek(option:string, pointOne:string | number, pointTwo?:number) {
     backG_details = [] // Clear time & weather details for background image
     week.style.opacity = "1" // Make week visible 
     week.innerHTML = "";  // Clear week
 
-    let searchOne;
-    let searchTwo;
+    let searchOne = "";
+    let searchTwo = "";
     if (option == "myP") {
         searchOne = `https://api.openweathermap.org/data/2.5/weather?lat=${pointOne}&lon=${pointTwo}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`;
         searchTwo = `https://api.openweathermap.org/data/2.5/forecast?lat=${pointOne}&lon=${pointTwo}&appid=a0eb8cd91bacf228a84f3e6370b0b4a3&units=imperial`
@@ -95,19 +97,20 @@ function getWeek(option, pointOne, pointTwo) {
             mainCard.windS.textContent = data.wind.speed + "mph";
             backG_details.push([...data.weather].pop().description);
         }).then(() => {
-            fetch(searchTwo)
+           fetch(searchTwo)
                 .then((res) => res.json())
                 .then((data) => {
-                    const list = data.list.filter((x) => {
+                    const list = data.list.filter((x: { dt: number }) => {
                         const time = new Date(x.dt * 1000).toLocaleString().split(", ")[1];
                         if (time == '5:00:00 PM' || time == '11:00:00 AM') return true;
                     });
                     let dayCount = 1;
-                    const weekList = [];
+                     const weekList:any = [];
                     for (let time = 0; time < list.length; time += 2) weekList.push([[...list].splice(time, 2)]);
-                    weekList.forEach((x, i) => {
+                    weekList.forEach((x:any, i:number) => {
                         const date = new Date();
                         if (i == 0) {
+                            console.log(x)
                             week.innerHTML += `
                     <div class="currentDay">
                         <img src="http://openweathermap.org/img/wn/${x[0][0].weather[0].icon}@2x.png" alt="">
@@ -147,6 +150,7 @@ function getWeek(option, pointOne, pointTwo) {
 
         }).catch((err) => {
             // Clear today card
+            mainCard.location.textContent = '. . .'
             mainCard.des.textContent = '. . .'
             mainCard.temp.textContent = '. . .'
             mainCard.feels.textContent = '. . .'
@@ -167,7 +171,7 @@ function getWeek(option, pointOne, pointTwo) {
         })
 }
 
-function getTime(data) {
+function getTime(data: { city: { coord: { lat: any; lon: any } } }) {
     fetch(`https://api.ipgeolocation.io/timezone?apiKey=957a47b3088a40a8a20879acaf412420&lat=${data.city.coord.lat}&long=${data.city.coord.lon}`)
         .then((res) => res.json())
         .then((data) => {
@@ -178,7 +182,7 @@ function getTime(data) {
         })
 }
 
-function getBackG(data, time) {
+function getBackG(data: (string | string[])[], time:any ) {
     if(screen.width <= 425){
         disableLoader()
         return;
@@ -191,9 +195,8 @@ function getBackG(data, time) {
         'url(./Public/images/Afternoon/rain.jpg)', 'url(./Public/images/Afternoon/snow.jpg)',
     ]
 
-    let time_One;
+    let time_One: string;
     let time_Two = time[2].slice(-2);
-    console.log(time_Two)
     if (time_Two == "AM" && +time[0] == 12 || time_Two == "AM" && +time[0] < 6) time_One = "Night";
     else if (time_Two == "PM" && +time[0] == 12 || time_Two == "PM" && +time[0] <= 3) time_One = "Day";
     else if (time_Two == "AM" && +time[0] >= 6) time_One = "Day";
@@ -202,12 +205,10 @@ function getBackG(data, time) {
 
 
 
-    console.log(data[1])
     backG.style.backgroundImage = images.filter((x) => {
         const weather = x.slice(0, -5).split("/").reverse()[0]
         
-        const time = x.slice(0, -5).split("/").reverse()[1];
-        console.log(time , time_One)
+        const time  = x.slice(0, -5).split("/").reverse()[1];
         if (data[1].includes(weather) && time == time_One) {
             return true;
         }
@@ -218,4 +219,3 @@ function getBackG(data, time) {
     disableLoader() // TURN LOADER OFF
 }
 
-setInterval(()=> console.log(screen.width),1000)
