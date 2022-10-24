@@ -35,7 +35,7 @@ function disableLoader() {
 
 // SEARCH OPTIONS
 myLocation.addEventListener("click", () => {
-    // activateLoader()   // TURN ON LOADER
+    activateLoader()   // TURN ON LOADER
     navigator.geolocation.getCurrentPosition((position) => {
         let lat:number = position.coords.latitude;
         let long:number = position.coords.longitude;
@@ -44,14 +44,14 @@ myLocation.addEventListener("click", () => {
 })
 
 btn.addEventListener("click", () => {
-    getWeek("searched", searchInput.value)
     activateLoader()   // TURN ON LOADER
+    getWeek("searched", searchInput.value)
 })
 
 document.addEventListener("keydown", (e) => {
     if (e.key == "Enter") {
-        getWeek("searched", searchInput.value);
         activateLoader()   // TURN ON LOADER
+        getWeek("searched", searchInput.value);
     }
 })
 
